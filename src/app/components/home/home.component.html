@@ -1,7 +1,95 @@
-<agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
-    <agm-marker [latitude]="lat" [longitude]="lng"></agm-marker>
-</agm-map>
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <form [formGroup]="formulario" (ngSubmit)="guardarPersona()">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Nombre</label>
+                        <input type="text" class="form-control" formControlName="nombre">
+                    </div>
+                    <div class="col-md-6">
+                        <label>Edad</label>
+                        <input type="text" class="form-control" formControlName="edad">
+                    </div>
+                </div>
+                <div formArrayName="_direcciones">
+                    <div class="row mt-3" *ngFor="let direccion of direccionesForm.controls; let idx = index" [formGroupName]="idx">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>Dirección {{idx + 1}}</h5>
+                                </div>
+                                <div class="col-md-6">
+                                    <p class="text-danger text-right" (click)="eliminarDireccion(idx)">Eliminar</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Calle</label>
+                            <input type="text" class="form-control" formControlName="calle">
+                        </div>
+                        <div class="col-md-6">
+                            <label>Número</label>
+                            <input type="text" class="form-control" formControlName="numero">
+                        </div>
+                        <div class="col-md-6">
+                            <label>Latitud</label>
+                            <input type="number" class="form-control" formControlName="latitud">
+                        </div>
+                        <div class="col-md-6">
+                            <label>Longitud</label>
+                            <input type="number" class="form-control" formControlName="longitud">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mt-3">
+                        <button type="button" class="btn btn-primary btn-block" (click)="agregarDireccion()">Agregar
+                            direccion</button>
+                    </div>
+                    <div class="col-md-6 mt-3">
+                        <button type="submit" class="btn btn-primary btn-block">Guardar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Edad</th>
+                        <th scope="col"></th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let persona of personas; let idxPersona = index">
+                        <th>{{idxPersona}}</th>
+                        <td>{{persona.nombre}}</td>
+                        <td>{{persona.edad}}</td>
+                        <td><button class="btn btn-primary" (click)="abrirMapa(modalMapa, persona._direcciones)">Ver direcciones</button></td>
+                        <td><button class="btn btn-danger" (click)="eliminarPersona(persona.id)">Eliminar</button></td>
+                        <td><button class="btn btn-danger" [routerLink]="['/editar', persona.id]">Editar</button></td>
+                    </tr>
+                </tbody>
+            </table>
 
-<div *ngIf="personas">
-    {{ personas | json}}
+        </div>
+    </div>
 </div>
+
+<ng-template #modalMapa>
+    <div class="modal-header">
+        <h4 class="modal-title pull-left">DIRECCIONES</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <agm-map [latitude]="lat" [longitude]="lng" [zoom]="zoom">
+            <agm-marker *ngFor="let direccion of direcciones" [latitude]="direccion.latitud" [longitude]="direccion.longitud"></agm-marker>
+        </agm-map>
+    </div>
+</ng-template>

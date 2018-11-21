@@ -14,4 +14,21 @@ export class PersonaService {
   public get(): Observable<Persona[]>{
     return this._personaApi.find();
   }
+
+  public getById(id: string): Observable<Persona>{
+    return this._personaApi.findById(id);
+  }
+
+  public create(persona: Persona): Observable<Persona>{
+    return this._personaApi.create(persona);
+  }
+
+  public delete(id: string): Observable<{}>{
+    return this._personaApi.deleteById(id);
+  }
+
+  public update(id: string, persona: Persona): Observable<Persona>{
+    return this._personaApi.replaceById(id, persona);
+
+  }
 }
