@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { PersonaService } from 'src/app/shared/services/persona.service';
+import { Persona } from 'src/app/shared/sdk';
 
 @Component({
   selector: 'app-home',
@@ -7,13 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  lat = -32.8970042;
-  lng = -68.8555522;
-  zoom = 16
+  public lat = -32.8970042;
+  public lng = -68.8555522;
+  public zoom = 16;
+  public personas: Persona[];
 
-  constructor() { }
+  constructor(
+    public _personaService: PersonaService
+  ) {}
 
   ngOnInit() {
+    this._personaService.get().subscribe(personas =>{
+      this.personas = personas;
+    })
   }
 
 }
